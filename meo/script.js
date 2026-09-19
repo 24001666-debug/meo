@@ -4,5 +4,5 @@ const messageParagraph = document.getElementById('message');
 
 // Add an event listener to the button
 button.addEventListener('click', () => {
-    messageParagraph.textContent = 'Hello! You clicked the button.';
+    messageParagraph.textContent = 'NQK NHU CC.';
 });
