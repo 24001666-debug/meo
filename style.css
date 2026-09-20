@@ -57,7 +57,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: rgba(255, 255, 255, 0.12);
   position: relative;
   z-index: 1;
@@ -173,6 +174,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 40px 20px 80px;
+  box-sizing: border-box;
 }
 
 .prompt-title {
@@ -196,12 +198,121 @@ body {
   justify-content: space-between;
   padding: 8px 18px 8px 20px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 20px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.2s ease, outline 0.2s ease;
 }
 
 .prompt-box {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.chat-dropdown {
+  width: min(82vw, 560px);
+  max-height: none;
+  overflow: visible;
+  opacity: 0;
+  margin-top: 14px;
+  transform: translateY(-8px);
+  transition: opacity 0.24s ease, transform 0.28s ease;
+}
+
+.chat-dropdown.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.queue-item {
+  background: rgba(15, 24, 35, 0.72);
+  border: 1px solid rgba(164, 199, 255, 0.18);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  color: rgba(255,255,255,0.9);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
+}
+
+.queue-item.active {
+  border-color: rgba(148, 184, 255, 0.45);
+  box-shadow: 0 0 0 1px rgba(148, 184, 255, 0.25), 0 12px 26px rgba(0, 0, 0, 0.12);
+}
+
+.queue-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.queue-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+}
+
+.queue-status {
+  color: rgba(180, 210, 255, 0.9);
+  font-size: 12px;
+}
+
+.queue-time {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.time-label {
+  color: rgba(255,255,255,0.65);
+  font-size: 12px;
+}
+
+.time-value {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.95);
+}
+
+.spin-gif {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-image: url("background.gif");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: spinBackground var(--spin-duration) linear infinite;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.18);
+}
+
+.chat-message {
+  background: rgba(15, 24, 35, 0.78);
+  border: 1px solid rgba(164, 199, 255, 0.18);
+  border-radius: 18px;
+  padding: 14px 16px;
+  color: rgba(255,255,255,0.94);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14);
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.image-message {
+  padding: 0;
+  overflow: hidden;
+  background: rgba(15, 24, 35, 0.35);
+}
+
+.image-message img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
 }
 
 .prompt-input {
@@ -221,23 +332,53 @@ body {
 }
 
 .sort-button {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.9);
-  border-radius: 999px;
-  padding: 8px 12px;
-  font-size: 12px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  display: grid;
+  place-items: center;
+  background: rgba(141, 180, 255, 0.14);
+  border: 1px solid rgba(157, 196, 255, 0.4);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 18px rgba(2, 8, 18, 0.28);
   cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.sorted-result {
-  margin-top: 18px;
-  min-height: 24px;
-  width: min(82vw, 560px);
-  text-align: center;
-  color: rgba(255,255,255,0.9);
-  font-size: 15px;
-  word-break: break-word;
+.sort-button:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 12px 22px rgba(2, 8, 18, 0.34);
+}
+
+.sort-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+
+.sort-icon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  width: 2px;
+  height: 9px;
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.sort-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid rgba(255, 255, 255, 0.9);
+  border-top: 2px solid rgba(255, 255, 255, 0.9);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 @media (max-width: 760px) {
