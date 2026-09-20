@@ -28,10 +28,12 @@
 
             <div class="prompt-box" aria-label="Prompt input">
               <input id="promptInput" type="text" class="prompt-input" placeholder="Input text here..." aria-label="Type your prompt" />
-              <button id="sortButton" class="sort-button" type="button">Sort</button>
+              <button id="sortButton" class="sort-button" type="button" aria-label="Submit prompt">
+                <span class="sort-icon" aria-hidden="true"></span>
+              </button>
             </div>
 
-            <div id="sortedResult" class="sorted-result" aria-live="polite"></div>
+            <div id="chatDropdown" class="chat-dropdown" aria-live="polite" aria-label="Chat response"></div>
           </div>
         </main>
       </div>
